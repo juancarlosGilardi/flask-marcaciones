@@ -17,7 +17,7 @@ import time
 from auth import auth_service
 from database import db_service
 from location_service import location_service
-from email_service import send_marking_email
+from mail_service import send_marking_email
 
 # Cargar variables de entorno
 load_dotenv()
