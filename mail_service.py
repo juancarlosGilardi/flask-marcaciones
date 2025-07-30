@@ -1,7 +1,7 @@
 import smtplib
 import logging
-from email.mime.text import MimeText
-from email.mime.multipart import MimeMultipart
+from email.mime.text import MimeText as EmailMimeText
+from email.mime.multipart import MimeMultipart as EmailMimeMultipart
 from datetime import datetime
 from database import db_service
 
@@ -61,7 +61,7 @@ def send_marking_email(user_data, marking_data, ruc):
         operation_id = f"MRC-{now.strftime('%Y%m%d%H%M%S')}"
         
         # Crear mensaje
-        message = MimeMultipart("alternative")
+        message = EmailMimeMultipart("alternative")
         message["Subject"] = f"Marcación - {user_data['userName']} ({marking_type})"
         message["From"] = f"Sistema de Marcaciones <{email_origen}>"
         message["To"] = email_destino
@@ -78,7 +78,7 @@ def send_marking_email(user_data, marking_data, ruc):
             operationId=operation_id
         )
         
-        html_part = MimeText(html_content, "html")
+        html_part = EmailMimeText(html_content, "html")
         message.attach(html_part)
         
         # Enviar email
