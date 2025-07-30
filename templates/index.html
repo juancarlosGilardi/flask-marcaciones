@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HISPE PULSE - Sistema de Marcaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <!-- PWA Meta tags -->
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HISPE PULSE">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>
+                <span class="logo-hispe">HISPE</span> 
+                <span class="logo-pulse">PULSE</span>
+            </h1>
+            <p class="subtitle">Marcaciones Inteligentes</p>
+            <div class="status-indicator" id="connectionStatus">
+                <span class="status-dot"></span>
+                <span class="status-text">Conectado</span>
+            </div>
+        </header>
+
+        <!-- User Info -->
+        <div class="user-info" id="userInfo">
+            <div class="avatar">
+                <span id="userInitials">JP</span>
+            </div>
+            <div class="user-details">
+                <h3 id="userName">Cargando...</h3>
+                <p id="userEmail">Cargando...</p>
+                <p id="userDni">DNI: Cargando...</p>
+            </div>
+            <div class="user-actions">
+                <button class="btn-refresh" onclick="app.loadTodayAttendance()" title="Actualizar marcaciones">
+                    🔄
+                </button>
+            </div>
+        </div>
+
+        <!-- Marcation Cards -->
+        <div class="marcation-grid">
+            <div class="marcation-card available" data-type="Ingreso">
+                <div class="card-icon">🚪</div>
+                <h3>Ingreso</h3>
+                <p class="card-status" id="statusIngreso">Toca para marcar</p>
+                <p class="card-time" id="timeIngreso"></p>
+            </div>
+
+            <div class="marcation-card disabled" data-type="Inicio de Refrigerio">
+                <div class="card-icon">🍽️</div>
+                <h3>Inicio Refrigerio</h3>
+                <p class="card-status">Requiere ingreso</p>
+                <p class="card-time"></p>
+            </div>
+
+            <div class="marcation-card disabled" data-type="Salida de Refrigerio">
+                <div class="card-icon">💼</div>
+                <h3>Fin Refrigerio</h3>
+                <p class="card-status">Requiere inicio refrigerio</p>
+                <p class="card-time"></p>
+            </div>
+
+            <div class="marcation-card disabled" data-type="Salida">
+                <div class="card-icon">🚪</div>
+                <h3>Salida</h3>
+                <p class="card-status">Requiere ingreso</p>
+                <p class="card-time"></p>
+            </div>
+        </div>
+
+        <!-- QR Scanner Section (solo cámara) -->
+        <div class="qr-section">
+            <!-- QR Reader (se muestra/oculta dinámicamente) -->
+            <div id="qrReader" class="qr-reader hidden"></div>
+            
+            <!-- Botón para cancelar escaneo -->
+            <button id="cancelScanButton" class="cancel-button hidden">
+                ❌ Cancelar Escaneo
+            </button>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="statusMessage" class="status-message hidden"></div>
+        
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p>Procesando marcación...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
