@@ -17,6 +17,7 @@ import time
 from auth import auth_service
 from database import db_service
 from location_service import location_service
+from email_service import send_marking_email
 
 # Cargar variables de entorno
 load_dotenv()
@@ -65,7 +66,7 @@ def register_page():
 @app.route('/dashboard')
 def dashboard():
     """Dashboard principal de marcaciones"""
-    return render_template('index.html')
+    return render_template('dashboard.html')
 
 # ============================================================================
 # RUTAS PWA
@@ -298,6 +299,32 @@ def mark_attendance():
             longitude=user_longitude,
             accuracy=location_accuracy
         )
+        
+        # ✅ ENVIAR EMAIL PARA INGRESO Y SALIDA
+        try:
+            if marcation_type in ['Ingreso', 'Salida']:
+                # Extraer RUC del QR code
+                ruc = qr_code.split('|')[0] if '|' in qr_code else qr_code
+                if '_' in ruc:
+                    ruc = ruc.split('_')[0]  # Para QRs formato "HISPE_lat_lng"
+                
+                logging.info(f"📧 Enviando email para {marcation_type} - RUC: {ruc}")
+                
+                send_marking_email(
+                    user_data={
+                        'userName': user_data['name'],
+                        'userEmail': user_data['email'],
+                        'userDni': user_data['dni']
+                    },
+                    marking_data={'marcationType': marcation_type},
+                    ruc=ruc
+                )
+                
+                logging.info(f"✅ Email enviado exitosamente para {marcation_type}")
+                
+        except Exception as email_error:
+            # No fallar la marcación por problemas de email
+            logging.warning(f"⚠️ Error enviando email (marcación exitosa): {email_error}")
         
         # Respuesta exitosa con información de ubicación
         response_data = {
